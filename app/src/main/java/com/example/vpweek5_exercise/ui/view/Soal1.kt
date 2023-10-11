@@ -11,11 +11,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,9 +30,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.vpweek5_exercise.model.GameState
+import com.example.vpweek5_exercise.viewmodel.GuessingGameViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun Soal1View() {
+    val viewModel: GuessingGameViewModel = viewModel()
+    var inputValue by rememberSaveable { mutableStateOf("") }
+    var isSubmit by rememberSaveable { mutableStateOf(false) }
+    var points by rememberSaveable { mutableStateOf(0) }
+    var turn by rememberSaveable { mutableStateOf(false) }
+    var attempts by rememberSaveable { mutableStateOf(viewModel.getRandom().attempts) }
+
     Surface(modifier = Modifier.padding(16.dp)) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -58,7 +74,7 @@ fun Soal1View() {
                                 .clip(RoundedCornerShape(50.dp))
                         ) {
                             Text(
-                                text = "Number of Guesses : ",
+                                text = "Number of Guesses : ${attempts}",
                                 color = Color.White,
                                 modifier = Modifier.padding(
                                     start = 10.dp,
@@ -76,7 +92,7 @@ fun Soal1View() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "3",
+                                text = viewModel.getRandom().targetNumber.toString(),
                                 fontSize = 32.sp,
                                 modifier = Modifier.padding(bottom = 15.dp)
                             )
@@ -87,17 +103,44 @@ fun Soal1View() {
                                 modifier = Modifier.padding(bottom = 10.dp)
                             )
 
-                            Text(text = "Score : ", fontSize = 16.sp)
+                            Text(text = "Score : ${points}", fontSize = 16.sp)
 
                             CustomTextField(
-                                value = "",
-                                onValueChanged = {},
+                                value = inputValue,
+                                onValueChanged = { inputValue = it },
                                 text = "Enter Your number",
                                 keyboardOptions = KeyboardOptions.Default.copy(
                                     keyboardType = KeyboardType.Number,
                                     imeAction = ImeAction.Done
                                 )
                             )
+
+                            Button(
+                                onClick = {
+                                    isSubmit = isSubmit == false
+                                },
+                                modifier = Modifier.padding(top = 10.dp)
+                            ) {
+                                Text(text = "Submit")
+                            }
+
+                            if (isSubmit && inputValue.isNotBlank() && !turn) {
+                                viewModel.guessNumber(inputValue.toInt())
+
+                                when (viewModel.getRandom().gameState) {
+                                    GameState.WIN -> {
+                                        points += 1
+                                        viewModel.getRandom().targetNumber = viewModel.getModel()
+                                        turn = true
+                                    }
+                                    GameState.LOSE -> {
+                                        attempts += 1
+                                        turn = true
+                                    }
+
+                                    else -> {}
+                                }
+                            }
                         }
                     }
                 }
