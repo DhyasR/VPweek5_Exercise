@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.vpweek5_exercise.model.GameState
 import com.example.vpweek5_exercise.viewmodel.GuessingGameViewModel
 
 @Composable
@@ -43,7 +40,7 @@ fun Soal1View() {
     var inputValue by rememberSaveable { mutableStateOf("") }
     var isDialogVisible by rememberSaveable { mutableStateOf(false) }
 
-    Surface(modifier = Modifier.padding(16.dp)) {
+    Surface(modifier = Modifier.padding(20.dp)) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
@@ -115,28 +112,11 @@ fun Soal1View() {
 
                             Button(
                                 onClick = {
-                                    if (inputValue.isNotBlank() && viewModel.getFill().gameState != GameState.LOSE_OUT_OF_ATTEMPTS) {
+                                    if (inputValue.isNotBlank()) {
                                         viewModel.guessNumber(inputValue.toInt())
 
-                                        when (viewModel.getFill().gameState) {
-                                            GameState.WIN -> {
-                                                viewModel.getFill().points += 1
-                                                viewModel.getFill().targetNumber =
-                                                    viewModel.getModel()
-                                                viewModel.getFill().attempts = 0
-                                            }
-
-                                            GameState.LOSE -> {
-                                                viewModel.getFill().attempts += 1
-
-                                                if (viewModel.getFill().attempts >= 3) {
-                                                    viewModel.getFill().gameState =
-                                                        GameState.LOSE_OUT_OF_ATTEMPTS
-                                                    isDialogVisible = true
-                                                }
-                                            }
-
-                                            else -> {}
+                                        if (viewModel.getFill().points == 3 || viewModel.getFill().attempts == 3) {
+                                            isDialogVisible = true
                                         }
 
                                         inputValue = ""
@@ -158,7 +138,7 @@ fun Soal1View() {
                                         Button(
                                             onClick = {
                                                 isDialogVisible = false
-                                                viewModel.getFill().attempts = 0
+                                                viewModel.getFill().points = 0
                                             }
                                         ) {
                                             Text("OK")
