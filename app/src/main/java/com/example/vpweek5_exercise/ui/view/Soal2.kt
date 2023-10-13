@@ -2,9 +2,11 @@ package com.example.vpweek5_exercise.ui.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
@@ -25,73 +27,78 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun Soal2View() {
+    Surface(modifier = Modifier.padding(16.dp)) {
+//        LazyColumn()
+    }
+}
+
+@Composable
+fun mainUI() {
     var inputSKS by rememberSaveable { mutableStateOf("") }
     var inputScore by rememberSaveable { mutableStateOf("") }
     var inputName by rememberSaveable { mutableStateOf("") }
 
-    Surface(modifier = Modifier.padding(16.dp)) {
-        Column() {
-            Text(
-                text = "Courses",
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold
-            )
+    Column() {
+        Text(
+            text = "Courses",
+            fontSize = 34.sp,
+            fontWeight = FontWeight.Bold
+        )
 
-            Text(text = "Total SKS : ", fontSize = 20.sp)
-            Text(text = "IPK       : ", fontSize = 20.sp)
+        Text(text = "Total SKS : ", fontSize = 20.sp, modifier = Modifier.padding(top = 10.dp))
+        Text(text = "IPK       : ", fontSize = 20.sp, modifier = Modifier.padding(top = 5.dp))
 
-            Column() {
-                Row {
-                    CustomTextField(
-                        value = inputSKS,
-                        onValueChanged = { inputSKS = it },
-                        text = "SKS",
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 10.dp)
-                    )
+        Column(modifier = Modifier.padding(top = 5.dp)) {
+            Row {
+                CustomTextField(
+                    value = inputSKS,
+                    onValueChanged = { inputSKS = it },
+                    text = "SKS",
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 10.dp)
+                )
 
-                    CustomTextField(
-                        value = inputScore,
-                        onValueChanged = { inputSKS = it },
-                        text = "Score",
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(start = 5.dp)
-                    )
-                }
+                CustomTextField(
+                    value = inputScore,
+                    onValueChanged = { inputSKS = it },
+                    text = "Score",
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 5.dp)
+                )
+            }
 
-                Row {
-                    CustomTextField(
-                        value = inputName,
-                        onValueChanged = { inputSKS = it },
-                        text = "Name",
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done
-                        ),
-                        modifier = Modifier.width(250.dp)
-                    )
+            Row(modifier = Modifier.fillMaxWidth()) {
+                CustomTextField(
+                    value = inputName,
+                    onValueChanged = { inputSKS = it },
+                    text = "Name",
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier.width(250.dp)
+                )
 
-                    Button(
-                        onClick = {
+                Button(
+                    onClick = {
 
-                        },
-                        modifier = Modifier
-                            .padding(start = 15.dp, top = 10.dp)
-                            .height(60.dp)
-                            .width(20.dp)
-                    ) {
-                        Text("+")
-                    }
+                    },
+                    modifier = Modifier
+                        .padding(start = 15.dp, top = 5.dp)
+                        .height(60.dp)
+                        .width(100.dp)
+                ) {
+                    Text("+", fontSize = 24.sp)
                 }
             }
         }
