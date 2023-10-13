@@ -2,7 +2,6 @@ package com.example.vpweek5_exercise.ui.view
 
 import android.graphics.Color.rgb
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vpweek5_exercise.viewmodel.GuessingGameViewModel
+import kotlin.system.exitProcess
 
 @Composable
 fun Soal1View() {
@@ -138,7 +138,7 @@ fun Soal1View() {
                                     confirmButton = {
                                         Button(
                                             onClick = {
-                                                System.exit(0)
+                                                exitProcess(0)
                                             }
                                         ) {
                                             Text("Exit")
