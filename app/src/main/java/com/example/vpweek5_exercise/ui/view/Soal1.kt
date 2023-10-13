@@ -184,6 +184,6 @@ fun CustomTextField(
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun ListMoviePreview() {
+fun Soal1Preview() {
     Soal1View()
 }
