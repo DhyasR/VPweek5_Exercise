@@ -5,7 +5,7 @@ import com.example.vpweek5_exercise.model.GameState
 import com.example.vpweek5_exercise.model.GuessingGameModel
 
 class GuessingGameViewModel : ViewModel() {
-    private val model = GuessingGameModel((1..10).random())
+    private var model = GuessingGameModel(getModel())
 
     fun guessNumber(number: Int) {
         if (number == model.targetNumber) {
@@ -15,11 +15,12 @@ class GuessingGameViewModel : ViewModel() {
         }
     }
 
-    fun getRandom(): GuessingGameModel {
+    fun getFill(): GuessingGameModel {
         return model
     }
 
     fun getModel(): Int {
-        return model.targetNumber
+        val newModel = GuessingGameModel((1..10).random())
+        return newModel.targetNumber
     }
 }

@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -24,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,20 +36,15 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.vpweek5_exercise.model.GameState
 import com.example.vpweek5_exercise.viewmodel.GuessingGameViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun Soal1View() {
     val viewModel: GuessingGameViewModel = viewModel()
     var inputValue by rememberSaveable { mutableStateOf("") }
-    var isSubmit by rememberSaveable { mutableStateOf(false) }
-    var points by rememberSaveable { mutableStateOf(0) }
-    var turn by rememberSaveable { mutableStateOf(false) }
-    var attempts by rememberSaveable { mutableStateOf(viewModel.getRandom().attempts) }
+    var isDialogVisible by rememberSaveable { mutableStateOf(false) }
 
     Surface(modifier = Modifier.padding(16.dp)) {
         Column(
-            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -59,7 +57,7 @@ fun Soal1View() {
             Box(
                 modifier = Modifier
                     .background(color = Color.LightGray)
-                    .clip(RoundedCornerShape(25.dp))
+                    .clip(shape = RoundedCornerShape(25.dp))
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -74,7 +72,7 @@ fun Soal1View() {
                                 .clip(RoundedCornerShape(50.dp))
                         ) {
                             Text(
-                                text = "Number of Guesses : ${attempts}",
+                                text = "Number of Guesses : ${viewModel.getFill().attempts}",
                                 color = Color.White,
                                 modifier = Modifier.padding(
                                     start = 10.dp,
@@ -92,7 +90,7 @@ fun Soal1View() {
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = viewModel.getRandom().targetNumber.toString(),
+                                text = viewModel.getFill().targetNumber.toString(),
                                 fontSize = 32.sp,
                                 modifier = Modifier.padding(bottom = 15.dp)
                             )
@@ -103,7 +101,7 @@ fun Soal1View() {
                                 modifier = Modifier.padding(bottom = 10.dp)
                             )
 
-                            Text(text = "Score : ${points}", fontSize = 16.sp)
+                            Text(text = "Score : ${viewModel.getFill().points}", fontSize = 16.sp)
 
                             CustomTextField(
                                 value = inputValue,
@@ -117,29 +115,56 @@ fun Soal1View() {
 
                             Button(
                                 onClick = {
-                                    isSubmit = isSubmit == false
+                                    if (inputValue.isNotBlank() && viewModel.getFill().gameState != GameState.LOSE_OUT_OF_ATTEMPTS) {
+                                        viewModel.guessNumber(inputValue.toInt())
+
+                                        when (viewModel.getFill().gameState) {
+                                            GameState.WIN -> {
+                                                viewModel.getFill().points += 1
+                                                viewModel.getFill().targetNumber =
+                                                    viewModel.getModel()
+                                                viewModel.getFill().attempts = 0
+                                            }
+
+                                            GameState.LOSE -> {
+                                                viewModel.getFill().attempts += 1
+
+                                                if (viewModel.getFill().attempts >= 3) {
+                                                    viewModel.getFill().gameState =
+                                                        GameState.LOSE_OUT_OF_ATTEMPTS
+                                                    isDialogVisible = true
+                                                }
+                                            }
+
+                                            else -> {}
+                                        }
+
+                                        inputValue = ""
+                                    }
                                 },
-                                modifier = Modifier.padding(top = 10.dp)
+                                modifier = Modifier
+                                    .padding(top = 10.dp),
+                                colors = ButtonDefaults.buttonColors(Color(rgb(69, 86, 184)))
                             ) {
                                 Text(text = "Submit")
                             }
 
-                            if (isSubmit && inputValue.isNotBlank() && !turn) {
-                                viewModel.guessNumber(inputValue.toInt())
-
-                                when (viewModel.getRandom().gameState) {
-                                    GameState.WIN -> {
-                                        points += 1
-                                        viewModel.getRandom().targetNumber = viewModel.getModel()
-                                        turn = true
+                            if (isDialogVisible) {
+                                AlertDialog(
+                                    onDismissRequest = { isDialogVisible = false },
+                                    title = { Text("Welp!") },
+                                    text = { Text("Your Score : ${viewModel.getFill().points}") },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                isDialogVisible = false
+                                                viewModel.getFill().attempts = 0
+                                            }
+                                        ) {
+                                            Text("OK")
+                                        }
                                     }
-                                    GameState.LOSE -> {
-                                        attempts += 1
-                                        turn = true
-                                    }
-
-                                    else -> {}
-                                }
+                                )
                             }
                         }
                     }
