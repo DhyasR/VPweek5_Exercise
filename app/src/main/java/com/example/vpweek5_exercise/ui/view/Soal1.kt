@@ -2,6 +2,7 @@ package com.example.vpweek5_exercise.ui.view
 
 import android.graphics.Color.rgb
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -137,11 +138,20 @@ fun Soal1View() {
                                     confirmButton = {
                                         Button(
                                             onClick = {
-                                                isDialogVisible = false
-                                                viewModel.getFill().points = 0
+                                                System.exit(0)
                                             }
                                         ) {
-                                            Text("OK")
+                                            Text("Exit")
+                                        }
+
+                                        Button(
+                                            onClick = {
+                                                isDialogVisible = false
+                                                viewModel.getFill().points = 0
+                                                viewModel.getFill().attempts = 0
+                                            }
+                                        ) {
+                                            Text("Play Again")
                                         }
                                     }
                                 )
