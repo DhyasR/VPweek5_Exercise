@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.vpweek5_exercise.ui.theme.VPweek5_ExerciseTheme
 import com.example.vpweek5_exercise.ui.view.Soal1View
+import com.example.vpweek5_exercise.ui.view.Soal2View
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Soal1View()
+//                    Soal1View()
+                    Soal2View()
                 }
             }
         }
