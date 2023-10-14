@@ -13,6 +13,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
@@ -64,10 +66,10 @@ fun Soal1View() {
                             .padding(bottom = 15.dp),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        Box(
+                        Card(
                             modifier = Modifier
-                                .background(color = Color(rgb(69, 86, 184)))
-                                .clip(RoundedCornerShape(50.dp))
+                                .clip(RoundedCornerShape(15.dp)),
+                            colors = CardDefaults.cardColors(Color(rgb(69, 86, 184)))
                         ) {
                             Text(
                                 text = "Number of Guesses : ${viewModel.getFill().attempts}",
